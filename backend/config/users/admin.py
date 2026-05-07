@@ -1,0 +1,16 @@
+from django.contrib import admin
+
+from .models import User, Subscription
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email', 'first_name', 'last_name', 'role')
+    list_filter = ('role',)
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('id',)
+
+
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'organizer']
