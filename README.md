@@ -1,17 +1,18 @@
 # CourseWork_2
 
-В проекте есть две части:
+Проект состоит из трех Docker-сервисов:
 
 - `backend` - Django + Django REST Framework;
-- `frontend` - React + Vite.
+- `frontend` - React + Vite;
+- `gateway` - Nginx, который отдает фронтенд и проксирует запросы к backend.
 
-## Установка на новом устройстве
+## Запуск через Docker
 
-Перед началом установите:
+Перед запуском установите:
 
 - Git;
-- Python 3.12 или новее;
-- Node.js и npm.
+- Docker;
+- Docker Compose.
 
 ### 1. Скопировать проект
 
@@ -20,113 +21,92 @@ git clone <ссылка-на-репозиторий>
 cd CourseWork_2
 ```
 
-### 2. Настроить backend
+### 2. Создать файл окружения
 
-Перейдите в папку с Django-проектом:
+Скопируйте пример переменных окружения:
 
 ```bash
-cd backend
+cp .env.example .env
 ```
 
-Создайте и активируйте виртуальное окружение.
-
-Windows PowerShell:
+Для Windows PowerShell:
 
 ```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
+Copy-Item .env.example .env
 ```
 
-Linux / macOS:
+При необходимости измените значения в `.env`.
+
+### 3. Собрать и запустить контейнеры
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+docker compose up --build
 ```
 
-Установите зависимости:
+При первом старте backend автоматически применит миграции и соберет статику.
 
-```bash
-pip install django djangorestframework djangorestframework-simplejwt djoser
-
-```
-
-Перейдите в папку с `manage.py`:
-
-```bash
-cd config
-```
-
-Создайте базу данных и примените миграции:
-
-```bash
-python manage.py migrate
-```
-
-При необходимости создайте администратора:
-
-```bash
-python manage.py createsuperuser
-```
-
-Запустите backend:
-
-```bash
-python manage.py runserver
-```
-
-Backend будет доступен по адресу:
+После запуска проект будет доступен по адресу:
 
 ```text
-http://127.0.0.1:8000/
+http://localhost/
 ```
 
-### 3. Настроить frontend
-
-Откройте второй терминал и перейдите в папку фронтенда:
-
-```bash
-cd frontend
-```
-
-Установите зависимости:
-
-```bash
-npm install
-```
-
-Если используется переменная окружения для адреса API, создайте файл `frontend/.env`:
-
-```env
-VITE_API_URL=http://127.0.0.1:8000
-```
-
-Запустите frontend:
-
-```bash
-npm run dev
-```
-
-Frontend будет доступен по адресу, который покажет Vite, обычно:
+Админка Django:
 
 ```text
-http://localhost:5173/
+http://localhost/admin/
 ```
 
-## Повторный запуск проекта
+## Создание суперпользователя Django
 
-Backend:
+Оставьте контейнеры запущенными и выполните в новом терминале:
 
 ```bash
-cd backend
-.\venv\Scripts\Activate.ps1
-cd config
-python manage.py runserver
+docker compose exec backend python manage.py createsuperuser
 ```
 
-Frontend:
+Далее введите email, username, имя, фамилию и пароль по подсказкам Django.
+
+Если база данных пустая, создайте суперпользователя до загрузки тестовых фикстур: тестовые события ссылаются на пользователя с `id=1`.
+
+## Загрузка тестовых фикстур
+
+Файл тестовых данных находится здесь:
+
+```text
+backend/config/events/fixtures/test_fixtures.json
+```
+
+Загрузить фикстуры можно командой:
 
 ```bash
-cd frontend
-npm run dev
+docker compose exec backend python manage.py loaddata test_fixtures.json
+```
+
+Если данные уже загружались ранее, повторный импорт может завершиться ошибкой из-за уникальных полей. В таком случае используйте чистую базу или удалите конфликтующие записи через админку.
+
+## Полезные команды
+
+Запустить проект в фоне:
+
+```bash
+docker compose up -d --build
+```
+
+Посмотреть логи:
+
+```bash
+docker compose logs -f
+```
+
+Остановить контейнеры:
+
+```bash
+docker compose down
+```
+
+Остановить контейнеры и удалить данные PostgreSQL:
+
+```bash
+docker compose down -v
 ```
