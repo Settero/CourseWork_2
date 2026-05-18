@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
-import { createEvent, getEvent, updateEvent } from "@/api/events"
+import {
+  createEvent,
+  getEvent,
+  getTags,
+  updateEvent,
+} from "@/api/events"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -55,6 +60,10 @@ function validateForm(values) {
     errors.location = "Введите место проведения"
   }
 
+  if (!Array.isArray(values.tags) || values.tags.length < 1) {
+    errors.tags = "Выберите как минимум один тег"
+  }
+
   return errors
 }
 
@@ -93,6 +102,10 @@ function normalizeApiErrors(error) {
     errors.location = getErrorMessage(error.location)
   }
 
+  if (error?.tags) {
+    errors.tags = getErrorMessage(error.tags)
+  }
+
   return errors
 }
 
@@ -123,7 +136,9 @@ function getFormValuesFromEvent(event) {
     date_time: formatDateTimeForInput(event.date_time),
     max_people: event.max_people ?? 1,
     location: getLocationValue(event.location),
-    tags: event.tags ?? [],
+    tags: Array.isArray(event.tags)
+      ? event.tags.map((tag) => tag.id)
+      : [],
   }
 }
 
@@ -132,9 +147,36 @@ export default function CreateEvent() {
   const { id } = useParams()
   const isEditMode = Boolean(id)
   const [values, setValues] = useState(initialValues)
+  const [tags, setTags] = useState([])
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [isEventLoading, setIsEventLoading] = useState(isEditMode)
+
+  useEffect(() => {
+    let ignore = false
+
+    async function loadTags() {
+      try {
+        const data = await getTags()
+        if (!ignore) {
+          setTags(Array.isArray(data) ? data : [])
+        }
+      } catch {
+        if (!ignore) {
+          setErrors((prev) => ({
+            ...prev,
+            form: "Не удалось загрузить теги",
+          }))
+        }
+      }
+    }
+
+    loadTags()
+
+    return () => {
+      ignore = true
+    }
+  }, [])
 
   useEffect(() => {
     if (!isEditMode) {
@@ -179,6 +221,27 @@ export default function CreateEvent() {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
+      }))
+    }
+  }
+
+  function handleTagToggle(tagId) {
+    setValues((prev) => {
+      const selected = Array.isArray(prev.tags) ? prev.tags : []
+      const nextTags = selected.includes(tagId)
+        ? selected.filter((id) => id !== tagId)
+        : [...selected, tagId]
+
+      return {
+        ...prev,
+        tags: nextTags,
+      }
+    })
+
+    if (errors.tags) {
+      setErrors((prev) => ({
+        ...prev,
+        tags: "",
       }))
     }
   }
@@ -249,6 +312,32 @@ export default function CreateEvent() {
                 {errors.name && (
                   <FieldDescription className="text-destructive">
                     {errors.name}
+                  </FieldDescription>
+                )}
+              </Field>
+
+              <Field>
+                <FieldLabel>Теги</FieldLabel>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => {
+                    const active = values.tags.includes(tag.id)
+                    return (
+                      <Button
+                        key={tag.id}
+                        type="button"
+                        variant={active ? "secondary" : "default"}
+                        onClick={() => handleTagToggle(tag.id)}
+                        className={active ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "bg-black text-white hover:bg-slate-800"}
+                        disabled={disabled}
+                      >
+                        {tag.name}
+                      </Button>
+                    )
+                  })}
+                </div>
+                {errors.tags && (
+                  <FieldDescription className="text-destructive">
+                    {errors.tags}
                   </FieldDescription>
                 )}
               </Field>

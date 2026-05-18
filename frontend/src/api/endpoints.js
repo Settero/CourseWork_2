@@ -16,4 +16,5 @@ export const ENDPOINTS = {
         cancelRegistration: (eventId) => `/api/events/${eventId}/register/`,
         participants: (eventId) => `/api/events/${eventId}/participants/`,
     },
+    tags: "/api/tags/",
 }

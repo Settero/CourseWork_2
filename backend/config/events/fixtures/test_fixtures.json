@@ -1,0 +1,304 @@
+[
+  {
+    "model": "events.tag",
+    "pk": 1,
+    "fields": {
+      "name": "Наука",
+      "slug": "science",
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.tag",
+    "pk": 2,
+    "fields": {
+      "name": "Студенческая жизнь",
+      "slug": "student-life",
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.tag",
+    "pk": 3,
+    "fields": {
+      "name": "IT",
+      "slug": "it",
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.tag",
+    "pk": 4,
+    "fields": {
+      "name": "Спорт",
+      "slug": "sport",
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.tag",
+    "pk": 5,
+    "fields": {
+      "name": "Образование",
+      "slug": "education",
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.tag",
+    "pk": 6,
+    "fields": {
+      "name": "Творчество",
+      "slug": "creativity",
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+
+  {
+    "model": "events.event",
+    "pk": 1,
+    "fields": {
+      "name": "День первокурсника",
+      "description": "Торжественное посвящение новых студентов и концертная программа.",
+      "date_time": "2026-09-01T15:00:00Z",
+      "location": "Актовый зал университета",
+      "status": "approved",
+      "max_people": 600,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 2,
+    "fields": {
+      "name": "Научная конференция студентов",
+      "description": "Выступления студентов с научными докладами и обсуждение исследований.",
+      "date_time": "2026-10-12T10:00:00Z",
+      "location": "Корпус №2, конференц-зал",
+      "status": "approved",
+      "max_people": 200,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+      "name": "Хакатон по веб-разработке",
+      "description": "24-часовой командный хакатон для студентов IT-направлений.",
+      "date_time": "2026-11-05T18:00:00Z",
+      "location": "IT-лаборатория",
+      "status": "pending",
+      "max_people": 80,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+      "name": "Межфакультетский турнир по футболу",
+      "description": "Соревнование между факультетами университета.",
+      "date_time": "2026-09-20T09:00:00Z",
+      "location": "Спортивный стадион",
+      "status": "approved",
+      "max_people": 300,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+      "name": "Мастер-класс по подготовке диплома",
+      "description": "Практические советы по написанию и оформлению выпускной работы.",
+      "date_time": "2026-12-01T13:00:00Z",
+      "location": "Аудитория B-204",
+      "status": "approved",
+      "max_people": 60,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 6,
+    "fields": {
+      "name": "Фестиваль студенческого творчества",
+      "description": "Выступления музыкальных и театральных коллективов университета.",
+      "date_time": "2026-10-25T16:00:00Z",
+      "location": "Главная сцена кампуса",
+      "status": "approved",
+      "max_people": 500,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 7,
+    "fields": {
+      "name": "Открытая лекция по искусственному интеллекту",
+      "description": "Лекция приглашенного эксперта о современных технологиях ИИ.",
+      "date_time": "2026-11-18T17:30:00Z",
+      "location": "Лекционный зал №1",
+      "status": "pending",
+      "max_people": 150,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 8,
+    "fields": {
+      "name": "Ярмарка студенческих клубов",
+      "description": "Презентация клубов, секций и объединений университета.",
+      "date_time": "2026-09-10T11:00:00Z",
+      "location": "Главный холл",
+      "status": "approved",
+      "max_people": 400,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 9,
+    "fields": {
+      "name": "Дебатный турнир",
+      "description": "Интеллектуальные дебаты между командами студентов.",
+      "date_time": "2026-10-03T14:00:00Z",
+      "location": "Аудитория C-101",
+      "status": "approved",
+      "max_people": 100,
+      "organizer": 1
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 10,
+    "fields": {
+      "name": "Благотворительная акция помощи приюту",
+      "description": "Сбор вещей и средств для городского приюта животных.",
+      "date_time": "2026-12-15T10:00:00Z",
+      "location": "Студенческий центр",
+      "status": "pending",
+      "max_people": 120,
+      "organizer": 1
+    }
+  },
+
+  {
+    "model": "events.eventtag",
+    "pk": 1,
+    "fields": {
+      "event": 1,
+      "tag": 2,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 2,
+    "fields": {
+      "event": 1,
+      "tag": 6,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 3,
+    "fields": {
+      "event": 2,
+      "tag": 1,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 4,
+    "fields": {
+      "event": 3,
+      "tag": 3,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 5,
+    "fields": {
+      "event": 4,
+      "tag": 4,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 6,
+    "fields": {
+      "event": 5,
+      "tag": 5,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 7,
+    "fields": {
+      "event": 6,
+      "tag": 6,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 8,
+    "fields": {
+      "event": 7,
+      "tag": 3,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 9,
+    "fields": {
+      "event": 8,
+      "tag": 2,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 10,
+    "fields": {
+      "event": 9,
+      "tag": 5,
+      "created_at": null,
+      "updated_at": null
+    }
+  },
+  {
+    "model": "events.eventtag",
+    "pk": 11,
+    "fields": {
+      "event": 10,
+      "tag": 2,
+      "created_at": null,
+      "updated_at": null
+    }
+  }
+]

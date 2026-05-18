@@ -28,6 +28,19 @@ function EventCardBase({ event, statusSlot, actionSlot, href }) {
           <CardDescription className="break-words">{event.description}</CardDescription>
         </CardHeader>
 
+        {event.tags?.length > 0 ? (
+          <CardContent className="flex flex-wrap gap-2 px-6 pt-2">
+            {event.tags.map((tag) => (
+              <span
+                key={tag.id}
+                className="rounded-full border border-muted/50 bg-muted px-2.5 py-1 text-xs font-medium text-foreground"
+              >
+                {tag.name}
+              </span>
+            ))}
+          </CardContent>
+        ) : null}
+
         <CardContent className="space-y-2 min-w-0">
           <p className="text-sm text-muted-foreground break-words">
             {location}

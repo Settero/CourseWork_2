@@ -31,6 +31,10 @@ export function getOrganizerEvents() {
   return apiRequest(ENDPOINTS.events.organizerList)
 }
 
+export function getTags() {
+  return apiRequest(ENDPOINTS.tags)
+}
+
 export function getAdminEvents() {
   return apiRequest(ENDPOINTS.events.adminList)
 }
