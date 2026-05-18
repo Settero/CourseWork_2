@@ -135,6 +135,32 @@ class EventSerializer(serializers.ModelSerializer):
             'free_places',
             'users_registered')
 
+    def create(self, validated_data):
+        # Accept tags from incoming request (list of ids) and attach them to the event
+        tags = self.initial_data.get('tags', None)
+        event = Event.objects.create(**validated_data)
+        if tags is not None:
+            try:
+                tag_ids = [int(t) for t in tags]
+                event.tags.set(tag_ids)
+            except Exception:
+                # ignore invalid tag ids; validation can be added if needed
+                pass
+        return event
+
+    def update(self, instance, validated_data):
+        tags = self.initial_data.get('tags', None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        if tags is not None:
+            try:
+                tag_ids = [int(t) for t in tags]
+                instance.tags.set(tag_ids)
+            except Exception:
+                pass
+        return instance
+
 
 class EventStatusSerializer(serializers.Serializer):
     status = serializers.ChoiceField(choices=Status.choices)

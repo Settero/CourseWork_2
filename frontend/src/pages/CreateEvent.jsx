@@ -117,6 +117,18 @@ function formatDateTimeForInput(dateTime) {
   return dateTime.slice(0, 16)
 }
 
+function getMinDateTime() {
+  const dt = new Date()
+  dt.setDate(dt.getDate() + 3)
+  const pad = (n) => String(n).padStart(2, "0")
+  const yyyy = dt.getFullYear()
+  const mm = pad(dt.getMonth() + 1)
+  const dd = pad(dt.getDate())
+  const hh = pad(dt.getHours())
+  const min = pad(dt.getMinutes())
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`
+}
+
 function getLocationValue(location) {
   if (!location) {
     return ""
@@ -226,11 +238,13 @@ export default function CreateEvent() {
   }
 
   function handleTagToggle(tagId) {
+    const normalizedTagId = Number(tagId)
+
     setValues((prev) => {
       const selected = Array.isArray(prev.tags) ? prev.tags : []
-      const nextTags = selected.includes(tagId)
-        ? selected.filter((id) => id !== tagId)
-        : [...selected, tagId]
+      const nextTags = selected.includes(normalizedTagId)
+        ? selected.filter((id) => id !== normalizedTagId)
+        : [...selected, normalizedTagId]
 
       return {
         ...prev,
@@ -255,12 +269,33 @@ export default function CreateEvent() {
       return
     }
 
+    // Дополнительная проверка: при создании события запрещаем выбирать дату раньше, чем сегодня +3 дня
+    if (!isEditMode) {
+      try {
+        const selected = new Date(values.date_time)
+        const min = new Date(getMinDateTime())
+        if (selected < min) {
+          setErrors((prev) => ({ ...prev, date_time: "Дата должна быть не раньше, чем через 3 дня" }))
+          return
+        }
+      } catch (err) {
+        // ignore parsing errors here — входная валидация уже покрывает это
+      }
+    }
+
+    const eventData = {
+      ...values,
+      tags: Array.isArray(values.tags)
+        ? values.tags.map((tagId) => Number(tagId))
+        : [],
+    }
+
     setIsLoading(true)
     try {
       if (isEditMode) {
-        await updateEvent(id, values)
+        await updateEvent(id, eventData)
       } else {
-        await createEvent(values)
+        await createEvent(eventData)
       }
       navigate(ROUTES.events.myEvents)
     } catch (error) {
@@ -320,13 +355,14 @@ export default function CreateEvent() {
                 <FieldLabel>Теги</FieldLabel>
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => {
-                    const active = values.tags.includes(tag.id)
+                    const tagId = Number(tag.id)
+                    const active = values.tags.includes(tagId)
                     return (
                       <Button
                         key={tag.id}
                         type="button"
                         variant={active ? "secondary" : "default"}
-                        onClick={() => handleTagToggle(tag.id)}
+                        onClick={() => handleTagToggle(tagId)}
                         className={active ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "bg-black text-white hover:bg-slate-800"}
                         disabled={disabled}
                       >
@@ -373,6 +409,7 @@ export default function CreateEvent() {
                     value={values.date_time}
                     onChange={handleInputChange}
                     disabled={disabled}
+                    min={!isEditMode ? getMinDateTime() : undefined}
                   />
                 </FieldGroup>
                 {errors.date_time && (

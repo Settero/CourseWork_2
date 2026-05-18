@@ -5,8 +5,8 @@
     "fields": {
       "name": "Наука",
       "slug": "science",
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -15,8 +15,8 @@
     "fields": {
       "name": "Студенческая жизнь",
       "slug": "student-life",
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -25,8 +25,8 @@
     "fields": {
       "name": "IT",
       "slug": "it",
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -35,8 +35,8 @@
     "fields": {
       "name": "Спорт",
       "slug": "sport",
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -45,8 +45,8 @@
     "fields": {
       "name": "Образование",
       "slug": "education",
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -55,8 +55,8 @@
     "fields": {
       "name": "Творчество",
       "slug": "creativity",
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
 
@@ -70,7 +70,9 @@
       "location": "Актовый зал университета",
       "status": "approved",
       "max_people": 600,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -83,7 +85,9 @@
       "location": "Корпус №2, конференц-зал",
       "status": "approved",
       "max_people": 200,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -96,7 +100,9 @@
       "location": "IT-лаборатория",
       "status": "pending",
       "max_people": 80,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -109,7 +115,9 @@
       "location": "Спортивный стадион",
       "status": "approved",
       "max_people": 300,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -122,7 +130,9 @@
       "location": "Аудитория B-204",
       "status": "approved",
       "max_people": 60,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -135,7 +145,9 @@
       "location": "Главная сцена кампуса",
       "status": "approved",
       "max_people": 500,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -148,7 +160,9 @@
       "location": "Лекционный зал №1",
       "status": "pending",
       "max_people": 150,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -161,7 +175,9 @@
       "location": "Главный холл",
       "status": "approved",
       "max_people": 400,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -174,7 +190,9 @@
       "location": "Аудитория C-101",
       "status": "approved",
       "max_people": 100,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -187,7 +205,9 @@
       "location": "Студенческий центр",
       "status": "pending",
       "max_people": 120,
-      "organizer": 1
+      "organizer": 1,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
 
@@ -197,8 +217,8 @@
     "fields": {
       "event": 1,
       "tag": 2,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -207,8 +227,8 @@
     "fields": {
       "event": 1,
       "tag": 6,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -217,8 +237,8 @@
     "fields": {
       "event": 2,
       "tag": 1,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -227,8 +247,8 @@
     "fields": {
       "event": 3,
       "tag": 3,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -237,8 +257,8 @@
     "fields": {
       "event": 4,
       "tag": 4,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -247,8 +267,8 @@
     "fields": {
       "event": 5,
       "tag": 5,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -257,8 +277,8 @@
     "fields": {
       "event": 6,
       "tag": 6,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -267,8 +287,8 @@
     "fields": {
       "event": 7,
       "tag": 3,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -277,8 +297,8 @@
     "fields": {
       "event": 8,
       "tag": 2,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -287,8 +307,8 @@
     "fields": {
       "event": 9,
       "tag": 5,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   },
   {
@@ -297,8 +317,8 @@
     "fields": {
       "event": 10,
       "tag": 2,
-      "created_at": null,
-      "updated_at": null
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
     }
   }
 ]
