@@ -47,7 +47,8 @@ source venv/bin/activate
 Установите зависимости:
 
 ```bash
-pip install -r requirements.txt
+pip install django djangorestframework djangorestframework-simplejwt djoser
+
 ```
 
 Перейдите в папку с `manage.py`:

@@ -1,3 +1,4 @@
+import { statusLabels } from "@/constants/eventStatus"
 import { EventCardBase } from "./EventCardBase"
 
 function AdminEventCard({ event, onStatusChange }) {
@@ -8,7 +9,16 @@ function AdminEventCard({ event, onStatusChange }) {
   return (
     <EventCardBase
       event={event}
+      href={`/events/${event.id}`}
       statusSlot={
+        <p className="text-sm">
+          <span className="text-muted-foreground">Статус: </span>
+          <span className="font-medium">
+            {statusLabels[event.status]}
+          </span>
+        </p>
+      }
+      actionSlot={
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">
             Статус мероприятия

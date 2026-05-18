@@ -46,22 +46,22 @@ class EventPermission(permissions.BasePermission):
             if obj.status == Status.APPROVED:
                 return True
 
-            if not request.user.role.is_authenticated:
+            if not request.user.is_authenticated:
                 return False
 
             if obj.status == Status.PENDING:
                 return (
-                    obj.author == request.user
+                    obj.organizer == request.user
                     or request.user.role == UserRoles.ADMIN
                 )
 
             if obj.status == Status.REJECTED:
-                return obj.author == request.user
+                return obj.organizer == request.user
 
             return False
 
         return (
             request.user.is_authenticated
             and request.user.role == UserRoles.ORGANIZER
-            and obj.author == request.user
+            and obj.organizer == request.user
         )

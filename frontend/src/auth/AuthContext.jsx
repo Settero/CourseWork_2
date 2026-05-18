@@ -31,6 +31,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("access")
     localStorage.removeItem("refresh")
     localStorage.removeItem("user")
+    localStorage.removeItem("registeredEventIds")
 
     setAccess(null)
     setRefresh(null)

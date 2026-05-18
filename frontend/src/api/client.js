@@ -20,3 +20,22 @@ export async function apiRequest(endpoint, options = {}) {
 
   return parseResponse(response)
 }
+
+export async function apiRequestBlob(endpoint, options = {}) {
+  const access = localStorage.getItem("access")
+
+  const response = await fetch(endpoint, {
+    ...options,
+    headers: {
+      ...(access ? { Authorization: `Bearer ${access}` } : {}),
+      ...options.headers,
+    },
+  })
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => null)
+    throw data || { detail: "Ошибка запроса" }
+  }
+
+  return response.blob()
+}

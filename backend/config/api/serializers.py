@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User, Subscription
-from events.models import Event, Tag, Location, Status
+from events.models import Event, Tag, Status
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,20 +36,21 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'slug', 'name')
 
 
-class LocationSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели Location."""
-
-    class Meta:
-        model = Location
-        fields = ('id', 'name', 'address')
-
-
 class EventMiniSerializer(serializers.ModelSerializer):
-    """Сериалайзер для модели Event с краткой информацией."""
+    free_places = serializers.IntegerField(read_only=True)
+    current_reg = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'name', 'date_time', 'location')
+        fields = (
+            'id',
+            'name',
+            'date_time',
+            'location',
+            'status',
+            'current_reg',
+            'free_places',
+        )
 
 
 class UserSubscriptionSerializer(UserSerializer):
@@ -113,9 +114,10 @@ class SubscribeCreateSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     """Сериалайзер для модели Event."""
     tags = TagSerializer(many=True, read_only=True)
-    location = LocationSerializer(read_only=True)
     organizer = UserSerializer(read_only=True)
     users_registered = UserSerializer(many=True, read_only=True)
+    free_places = serializers.IntegerField(read_only=True)
+    current_reg = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Event
@@ -128,7 +130,9 @@ class EventSerializer(serializers.ModelSerializer):
             'tags',
             'status',
             'max_people',
+            'current_reg',
             'organizer',
+            'free_places',
             'users_registered')
 
 

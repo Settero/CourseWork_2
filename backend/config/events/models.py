@@ -48,25 +48,6 @@ class Tag(BaseModel):
         return self.name
 
 
-class Location(BaseModel):
-    name = models.CharField(
-        max_length=LOCATION_MAX_LENGTH,
-        unique=True,
-        verbose_name='Название локации')
-    address = models.CharField(
-        max_length=ADDRESS_MAX_LENGTH,
-        unique=True,
-        verbose_name='Адрес локации')
-
-    class Meta:
-        verbose_name = 'Локация'
-        verbose_name_plural = 'Локации'
-        ordering = ['id']
-
-    def __str__(self):
-        return self.name
-
-
 class Event(BaseModel):
     name = models.CharField(
         max_length=EVENT_NAME_MAX_LENGTH,
@@ -76,11 +57,9 @@ class Event(BaseModel):
         verbose_name='Описание события')
     date_time = models.DateTimeField(
         verbose_name='Дата и время проведения события')
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.PROTECT,
-        related_name='events',
-        verbose_name='Локация проведения события')
+    location = models.TextField(
+        max_length=ADDRESS_MAX_LENGTH,
+        verbose_name='Место проведения события')
     tags = models.ManyToManyField(
         Tag,
         related_name='events',

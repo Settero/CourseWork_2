@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Event, Tag, Location
+from .models import Event, Tag
 
 
 @admin.register(Event)
@@ -13,8 +13,3 @@ class EventAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
-
-
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ['name', 'address']

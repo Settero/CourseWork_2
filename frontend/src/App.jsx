@@ -8,6 +8,8 @@ import Profile from "@/pages/users/Profile"
 import MyEvents from "@/pages/MyEvents"
 import MyRegistrations from "@/pages/MyRegistation"
 import AdminPanel from "@/pages/AdminEvents"
+import EventPage from "./pages/EventPage"
+import CreateEvent from "./pages/CreateEvent"
 import NotFound from "@/pages/404"
 
 import { ProtectedRoute } from "@/auth/ProtectedRoute"
@@ -21,6 +23,8 @@ function App() {
 
         <Route path={ROUTES.home} element={<Events />} />
 
+        <Route path="/events/:id" element={<EventPage />} />
+
         <Route element={<ProtectedRoute />} >
           <Route path={ROUTES.user.profile} element={<Profile />} />
         </Route>
@@ -31,6 +35,8 @@ function App() {
 
         <Route element={<RoleRoute allowedRoles={["organizer"]} />}>
            <Route path={ROUTES.events.myEvents} element={<MyEvents />} />
+           <Route path={ROUTES.events.create} element={<CreateEvent />} />
+           <Route path="/organizer/events/:id/edit" element={<CreateEvent />} />
         </Route>
         
         <Route element={<RoleRoute allowedRoles={["admin"]} />}>

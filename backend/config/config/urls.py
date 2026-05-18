@@ -4,7 +4,6 @@ from rest_framework.routers import DefaultRouter
 
 from api.views import (
     EventViewSet,
-    LocationViewSet,
     TagViewSet,
     UserViewSet,
 )
@@ -12,7 +11,6 @@ from api.views import (
 router = DefaultRouter()
 router.register('users', UserViewSet, basename='users')
 router.register('tags', TagViewSet, basename='tags')
-router.register('locations', LocationViewSet, basename='locations')
 router.register('events', EventViewSet, basename='events')
 
 urlpatterns = [

@@ -1,5 +1,7 @@
 from djoser.views import UserViewSet as DjoserViewSet
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.db.models import Count, F, ExpressionWrapper, IntegerField
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, status
@@ -11,10 +13,10 @@ from users.models import User
 from .serializers import (
     UserSerializer,
     TagSerializer,
-    LocationSerializer,
     EventSerializer,
-    EventStatusSerializer)
-from events.models import Tag, Location, Event, Status, EventRegistration
+    EventStatusSerializer,
+    EventMiniSerializer)
+from events.models import Tag, Event, Status, EventRegistration
 from .permissions import IsOrganizer, EventPermission, IsAdmin, IsUser
 
 
@@ -37,24 +39,32 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsOrganizer,)
 
 
-class LocationViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-    permission_classes = (IsOrganizer,)
-
-
 class EventViewSet(ModelViewSet):
-    serializer_class = EventSerializer
     permission_classes = (EventPermission,)
 
     def get_queryset(self):
         queryset = Event.objects.select_related('organizer')
+
+        queryset = queryset.annotate(
+            current_reg=Count('registrations', distinct=True),
+            free_places=ExpressionWrapper(
+                F('max_people') - Count('registrations', distinct=True),
+                output_field=IntegerField()
+            )
+        )
+
         if self.action == 'list':
             return queryset.filter(status=Status.APPROVED)
+
         return queryset
 
+    def get_serializer_class(self):
+        if self.action in ['list', 'admin_pending', 'my_events', 'registered_events']:
+            return EventMiniSerializer
+        return EventSerializer
+
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(organizer=self.request.user)
 
     @action(
         detail=False,
@@ -63,9 +73,7 @@ class EventViewSet(ModelViewSet):
         permission_classes=[IsAdmin],
     )
     def admin_pending(self, request):
-        events = Event.objects.select_related('organizer').filter(
-            status=Status.PENDING
-        )
+        events = self.get_queryset().filter(status=Status.PENDING)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
 
@@ -76,9 +84,7 @@ class EventViewSet(ModelViewSet):
         permission_classes=[IsOrganizer],
     )
     def my_events(self, request):
-        events = Event.objects.select_related('organizer').filter(
-            organizer=request.user
-        )
+        events = self.get_queryset().filter(organizer=request.user)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
 
@@ -89,18 +95,15 @@ class EventViewSet(ModelViewSet):
         permission_classes=[IsAdmin],
     )
     def change_status(self, request, pk=None):
-        event = self.get_object()
+        event = self.get_queryset().get(pk=pk)
 
         serializer = EventStatusSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        new_status = serializer.validated_data['status']
-
-        event.status = new_status
+        event.status = serializer.validated_data['status']
         event.save(update_fields=['status'])
 
-        response_serializer = self.get_serializer(event)
-        return Response(response_serializer.data, status=status.HTTP_200_OK)
+        return Response(self.get_serializer(event).data, status=status.HTTP_200_OK)
 
     @action(
         detail=True,
@@ -109,17 +112,12 @@ class EventViewSet(ModelViewSet):
         permission_classes=[IsUser],
     )
     def register(self, request, pk=None):
-        event = get_object_or_404(
-            Event,
-            pk=pk,
-            status=Status.APPROVED,
-        )
+        event = self.get_queryset().get(pk=pk, status=Status.APPROVED)
 
         if request.method == 'POST':
             return self.register_to_event(request, event)
 
-        if request.method == 'DELETE':
-            return self.cancel_event_registration(request, event)
+        return self.cancel_event_registration(request, event)
 
     @action(
         detail=False,
@@ -128,7 +126,9 @@ class EventViewSet(ModelViewSet):
         permission_classes=[IsUser],
     )
     def registered_events(self, request):
-        events = request.user.registered_events.select_related('organizer')
+        events = self.get_queryset().filter(
+            registrations__user=request.user
+        ).distinct()
 
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
@@ -139,20 +139,11 @@ class EventViewSet(ModelViewSet):
             user=request.user,
         ).exists():
             raise ValidationError(
-                {
-                    'detail': 'Вы уже зарегистрированы на это мероприятие.'
-                }
+                {'detail': 'Вы уже зарегистрированы на это мероприятие.'}
             )
-
-        registered_count = EventRegistration.objects.filter(
-            event=event,
-        ).count()
-
-        if registered_count >= event.max_people:
+        if event.current_reg >= event.max_people:
             raise ValidationError(
-                {
-                    'detail': 'На мероприятие больше нет свободных мест.'
-                }
+                {'detail': 'На мероприятие больше нет свободных мест.'}
             )
 
         EventRegistration.objects.create(
@@ -160,8 +151,10 @@ class EventViewSet(ModelViewSet):
             user=request.user,
         )
 
-        serializer = self.get_serializer(event)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(
+            self.get_serializer(event).data,
+            status=status.HTTP_201_CREATED
+        )
 
     def cancel_event_registration(self, request, event):
         registration = EventRegistration.objects.filter(
@@ -171,12 +164,40 @@ class EventViewSet(ModelViewSet):
 
         if registration is None:
             raise ValidationError(
-                {
-                    'detail': 'Вы не зарегистрированы на это мероприятие.'
-                }
+                {'detail': 'Вы не зарегистрированы на это мероприятие.'}
             )
 
         registration.delete()
 
-        serializer = self.get_serializer(event)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            self.get_serializer(event).data,
+            status=status.HTTP_200_OK
+        )
+
+    @action(
+        detail=True,
+        methods=['get'],
+        url_path='participants',
+        permission_classes=[IsOrganizer],
+    )
+    def participants(self, request, pk=None):
+        event = self.get_queryset().get(pk=pk)
+
+        if event.organizer != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        participants = event.users_registered.order_by(
+            'last_name',
+            'first_name',
+        )
+        content = '\n'.join(
+            f'{user.first_name} {user.last_name}' for user in participants
+        )
+        if content:
+            content += '\n'
+
+        response = HttpResponse(content, content_type='text/plain; charset=utf-8')
+        response['Content-Disposition'] = (
+            f'attachment; filename="event_{event.id}_participants.txt"'
+        )
+        return response

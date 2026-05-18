@@ -7,6 +7,7 @@ export const ROUTES = {
     events: {
         myRegistations: "/profile/registrations",
         myEvents: "/organizer/events",
+        create: "/organizer/events/create",
         adminPanel: "/admin",
     },
     user: {

@@ -1,3 +1,4 @@
+import { Link } from "react-router"
 import {
   Card,
   CardContent,
@@ -6,39 +7,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { formatEventDateTime } from "@/lib/utils"
 
-const statusLabels = {
-  pending: "На рассмотрении",
-  approved: "Одобрено",
-  rejected: "Отклонено",
-  archived: "В архиве",
-}
-
-function EventCardBase({ event, statusSlot, actionSlot }) {
-  const freePlaces = event.max_people - event.users_registered_count
+function EventCardBase({ event, statusSlot, actionSlot, href }) {
+  const location = typeof event.location === "string"
+    ? event.location
+    : event.location?.name
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{event.name}</CardTitle>
-        <CardDescription>{event.description}</CardDescription>
-      </CardHeader>
+    <Card className="group hover:shadow-lg transition-shadow">
+      <Link
+        to={href ?? "#"}
+        className={`block rounded-2xl text-inherit no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${href ? "cursor-pointer" : "cursor-default"}`}
+        onClick={(e) => {
+          if (!href) e.preventDefault()
+        }}
+      >
+        <CardHeader>
+          <CardTitle className="break-words">{event.name}</CardTitle>
+          <CardDescription className="break-words">{event.description}</CardDescription>
+        </CardHeader>
 
-      <CardContent className="space-y-2">
-        <p className="text-sm text-muted-foreground">
-          {event.location.name}
-        </p>
+        <CardContent className="space-y-2 min-w-0">
+          <p className="text-sm text-muted-foreground break-words">
+            {location}
+          </p>
 
-        <p className="text-sm text-muted-foreground">
-          {event.date_time}
-        </p>
+          <p className="text-sm text-muted-foreground break-words">
+            {formatEventDateTime(event.date_time)}
+          </p>
 
-        {statusSlot}
-      </CardContent>
+          {statusSlot}
+        </CardContent>
+      </Link>
 
       <CardFooter className="flex items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground">
-          Свободных мест: {freePlaces}
+        <p className="text-sm text-muted-foreground break-words">
+          Свободных мест: {event.free_places}
         </p>
 
         {actionSlot}
@@ -47,4 +52,4 @@ function EventCardBase({ event, statusSlot, actionSlot }) {
   )
 }
 
-export { EventCardBase, statusLabels }
+export { EventCardBase }
