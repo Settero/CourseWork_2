@@ -104,12 +104,12 @@ export default function Profile() {
       <div className="w-full max-w-md">
         {user && (
           <Card>
-            <CardHeader className="flex flex-col items-center gap-4 text-center md:flex-row md:items-start md:justify-between md:text-left">
+            <CardHeader className="relative flex flex-col items-center gap-4 text-center">
               <div>
                 <CardTitle className="text-2xl">
                   {user.first_name} {user.last_name}
                 </CardTitle>
-                <div className="mt-2 flex justify-center md:justify-start">
+                <div className="mt-2 flex justify-center">
                   <Badge className={`${getRoleColor(user.role)} text-white`}>
                     {getRoleLabel(user.role)}
                   </Badge>
@@ -119,6 +119,7 @@ export default function Profile() {
                 variant={isEditing ? "secondary" : "outline"}
                 size="icon"
                 onClick={handleEditToggle}
+                className="absolute right-4 top-0"
               >
                 <Edit3 />
               </Button>
@@ -194,7 +195,7 @@ export default function Profile() {
                 </Button>
               </CardFooter>
             ) : (
-              <CardFooter className="flex flex-col gap-2 px-4 pb-4 pt-2 sm:flex-row sm:justify-between">
+              <CardFooter className="flex flex-col justify-center gap-2 px-4 pb-4 pt-2 sm:flex-row">
                 <Button variant="destructive" onClick={handleLogout}>
                   Выйти
                 </Button>
