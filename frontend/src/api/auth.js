@@ -32,3 +32,10 @@ export function getCurrentUser(access) {
     },
   })
 }
+
+export function updateCurrentUser(values) {
+  return apiRequest(ENDPOINTS.auth.me, {
+    method: "PATCH",
+    body: JSON.stringify(values),
+  })
+}

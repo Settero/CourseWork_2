@@ -38,6 +38,11 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  function updateUser(userData) {
+    localStorage.setItem("user", JSON.stringify(userData))
+    setUser(userData)
+  }
+
   useEffect(() => {
     if (!access) {
       setIsLoading(false)
@@ -82,6 +87,7 @@ export function AuthProvider({ children }) {
         isLoading,
         login,
         logout,
+        updateUser,
       }}
     >
       {children}
