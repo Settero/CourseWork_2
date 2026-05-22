@@ -8,6 +8,7 @@ LOCATION_MAX_LENGTH = 50
 ADDRESS_MAX_LENGTH = 255
 EVENT_NAME_MAX_LENGTH = 100
 STATUS_MAX_LENGTH = 20
+HEX_COLOR_LENGTH = 7
 
 
 class Status(models.TextChoices):
@@ -38,6 +39,11 @@ class Tag(BaseModel):
         unique=True,
         verbose_name='Уникальный идентификатор тега',
         max_length=TAG_MAX_LENGTH)
+    color = models.CharField(
+        max_length=HEX_COLOR_LENGTH,
+        default='#3b82f6',
+        verbose_name='Цвет тега (hex код)',
+        help_text='Формат: #RRGGBB')
 
     class Meta:
         verbose_name = 'Тег'
@@ -55,6 +61,11 @@ class Event(BaseModel):
         verbose_name='Название события')
     description = models.TextField(
         verbose_name='Описание события')
+    image = models.ImageField(
+        upload_to='events/',
+        blank=True,
+        null=True,
+        verbose_name='Афиша события')
     date_time = models.DateTimeField(
         verbose_name='Дата и время проведения события')
     location = models.TextField(

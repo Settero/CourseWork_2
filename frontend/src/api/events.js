@@ -1,5 +1,5 @@
 import { ENDPOINTS } from "./endpoints";
-import { apiRequest, apiRequestBlob } from "./client"
+import { apiRequest, apiRequestBlob, apiRequestFormData } from "./client"
 
 export function getEvents() {
   return apiRequest(ENDPOINTS.events.list)
@@ -10,6 +10,12 @@ export function getEvent(eventId) {
 }
 
 export function createEvent(eventData) {
+  if (eventData instanceof FormData) {
+    return apiRequestFormData(ENDPOINTS.events.create, {
+      method: "POST",
+      body: eventData,
+    })
+  }
   return apiRequest(ENDPOINTS.events.create, {
     method: "POST",
     body: JSON.stringify(eventData),
@@ -17,6 +23,12 @@ export function createEvent(eventData) {
 }
 
 export function updateEvent(eventId, eventData) {
+  if (eventData instanceof FormData) {
+    return apiRequestFormData(ENDPOINTS.events.details(eventId), {
+      method: "PATCH",
+      body: eventData,
+    })
+  }
   return apiRequest(ENDPOINTS.events.details(eventId), {
     method: "PATCH",
     body: JSON.stringify(eventData),

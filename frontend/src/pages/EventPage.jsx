@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useEvent } from "@/hooks/useEvent"
-import { formatEventDateTime } from "@/lib/utils"
+import { formatEventDateTime, getContrastColor } from "@/lib/utils"
 import { ROUTES } from "@/routes/paths"
 
 export default function EventPage() {
@@ -169,13 +169,49 @@ export default function EventPage() {
       <div className="container mx-auto max-w-7xl px-4 py-8">
         <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
           <div className="space-y-6">
+            {(() => {
+              const firstTagColor = event.tags?.[0]?.color
+              if (event.image) {
+                return (
+                  <div className="rounded-2xl overflow-hidden">
+                    <img
+                      src={event.image}
+                      alt={event.name}
+                      className="w-full h-96 object-cover"
+                    />
+                  </div>
+                )
+              }
+
+              if (firstTagColor) {
+                return (
+                  <div
+                    className="rounded-2xl overflow-hidden h-96"
+                    style={{ backgroundColor: firstTagColor }}
+                  />
+                )
+              }
+
+              return null
+            })()}
+
             <div className="space-y-4">
               <div className="flex flex-wrap gap-2">
-                {event.tags?.map((tag) => (
-                  <Badge key={tag.id} variant="secondary">
-                    {tag.name}
-                  </Badge>
-                ))}
+                {event.tags?.map((tag) => {
+                  const tagColor = tag.color || '#3b82f6'
+                  return (
+                    <span
+                      key={tag.id}
+                      style={{
+                        backgroundColor: tagColor,
+                        color: '#ffffff'
+                      }}
+                      className="inline-block px-3 py-1 rounded-full text-sm font-medium"
+                    >
+                      {tag.name}
+                    </span>
+                  )
+                })}
               </div>
 
               <div>

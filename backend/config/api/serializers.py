@@ -33,10 +33,11 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'slug', 'name')
+        fields = ('id', 'slug', 'name', 'color')
 
 
 class EventMiniSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=True)
     free_places = serializers.IntegerField(read_only=True)
     current_reg = serializers.IntegerField(read_only=True)
 
@@ -47,9 +48,11 @@ class EventMiniSerializer(serializers.ModelSerializer):
             'name',
             'date_time',
             'location',
+            'tags',
             'status',
             'current_reg',
             'free_places',
+            'image',
         )
 
 
@@ -133,7 +136,9 @@ class EventSerializer(serializers.ModelSerializer):
             'current_reg',
             'organizer',
             'free_places',
-            'users_registered')
+            'users_registered',
+            'image',
+        )
 
     def create(self, validated_data):
         # Accept tags from incoming request (list of ids) and attach them to the event

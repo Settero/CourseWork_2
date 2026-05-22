@@ -27,6 +27,7 @@ services:
       DB_PORT: ${DB_PORT}
     volumes:
       - backend_static:/app/static
+      - backend_media:/app/media
     depends_on:
       db:
         condition: service_healthy
@@ -45,6 +46,7 @@ services:
     volumes:
       - frontend_dist:/usr/share/nginx/html:ro
       - backend_static:/backend_static:ro
+      - backend_media:/backend_media:ro
     depends_on:
       backend:
         condition: service_started
@@ -54,4 +56,5 @@ services:
 volumes:
   postgres_data:
   backend_static:
+  backend_media:
   frontend_dist:

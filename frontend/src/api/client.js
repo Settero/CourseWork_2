@@ -21,6 +21,20 @@ export async function apiRequest(endpoint, options = {}) {
   return parseResponse(response)
 }
 
+export async function apiRequestFormData(endpoint, options = {}) {
+  const access = localStorage.getItem("access")
+
+  const response = await fetch(endpoint, {
+    ...options,
+    headers: {
+      ...(access ? { Authorization: `Bearer ${access}` } : {}),
+      ...options.headers,
+    },
+  })
+
+  return parseResponse(response)
+}
+
 export async function apiRequestBlob(endpoint, options = {}) {
   const access = localStorage.getItem("access")
 

@@ -7,15 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { formatEventDateTime } from "@/lib/utils"
+import { formatEventDateTime, getContrastColor } from "@/lib/utils"
 
 function EventCardBase({ event, statusSlot, actionSlot, href }) {
   const location = typeof event.location === "string"
     ? event.location
     : event.location?.name
+  
+  const firstTagColor = event.tags?.[0]?.color
 
   return (
-    <Card className="group hover:shadow-lg transition-shadow">
+    <Card className="group hover:shadow-lg transition-shadow overflow-hidden pt-0">
       <Link
         to={href ?? "#"}
         className={`block rounded-2xl text-inherit no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${href ? "cursor-pointer" : "cursor-default"}`}
@@ -23,23 +25,44 @@ function EventCardBase({ event, statusSlot, actionSlot, href }) {
           if (!href) e.preventDefault()
         }}
       >
-        <CardHeader>
+        {event.image ? (
+          <div className="w-full h-40 bg-muted overflow-hidden -m-0">
+            <img
+              src={event.image}
+              alt={event.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+            />
+          </div>
+        ) : firstTagColor ? (
+          <div 
+            className="w-full h-40 overflow-hidden -m-0" 
+            style={{ backgroundColor: firstTagColor }}
+          />
+        ) : null}
+
+        <CardHeader className="pt-4">
           <CardTitle className="break-words">{event.name}</CardTitle>
+
+          {event.tags?.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {event.tags.map((tag) => {
+                const bg = tag.color || '#3b82f6'
+                const fg = getContrastColor(bg)
+                return (
+                  <span
+                    key={tag.id}
+                    style={{ backgroundColor: bg, color: fg }}
+                    className="rounded-full px-2.5 py-1 text-xs font-medium"
+                  >
+                    {tag.name}
+                  </span>
+                )
+              })}
+            </div>
+          ) : null}
+
           <CardDescription className="break-words">{event.description}</CardDescription>
         </CardHeader>
-
-        {event.tags?.length > 0 ? (
-          <CardContent className="flex flex-wrap gap-2 px-6 pt-2">
-            {event.tags.map((tag) => (
-              <span
-                key={tag.id}
-                className="rounded-full border border-muted/50 bg-muted px-2.5 py-1 text-xs font-medium text-foreground"
-              >
-                {tag.name}
-              </span>
-            ))}
-          </CardContent>
-        ) : null}
 
         <CardContent className="space-y-2 min-w-0">
           <p className="text-sm text-muted-foreground break-words">

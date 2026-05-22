@@ -31,6 +31,7 @@ const initialValues = {
   max_people: 1,
   location: "",
   tags: [],
+  image: null,
 }
 
 function validateForm(values) {
@@ -151,6 +152,7 @@ function getFormValuesFromEvent(event) {
     tags: Array.isArray(event.tags)
       ? event.tags.map((tag) => tag.id)
       : [],
+    image: null,
   }
 }
 
@@ -163,6 +165,7 @@ export default function CreateEvent() {
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [isEventLoading, setIsEventLoading] = useState(isEditMode)
+  const [imagePreview, setImagePreview] = useState(null)
 
   useEffect(() => {
     let ignore = false
@@ -260,6 +263,29 @@ export default function CreateEvent() {
     }
   }
 
+  function handleImageChange(e) {
+    const file = e.target.files?.[0]
+    if (file) {
+      setValues((prev) => ({
+        ...prev,
+        image: file,
+      }))
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+
+      if (errors.image) {
+        setErrors((prev) => ({
+          ...prev,
+          image: "",
+        }))
+      }
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
 
@@ -283,19 +309,29 @@ export default function CreateEvent() {
       }
     }
 
-    const eventData = {
-      ...values,
-      tags: Array.isArray(values.tags)
-        ? values.tags.map((tagId) => Number(tagId))
-        : [],
+    const formData = new FormData()
+    formData.append("name", values.name)
+    formData.append("description", values.description)
+    formData.append("date_time", values.date_time)
+    formData.append("max_people", values.max_people)
+    formData.append("location", values.location)
+    
+    if (values.image instanceof File) {
+      formData.append("image", values.image)
+    }
+
+    if (Array.isArray(values.tags) && values.tags.length > 0) {
+      values.tags.forEach((tagId) => {
+        formData.append("tags", Number(tagId))
+      })
     }
 
     setIsLoading(true)
     try {
       if (isEditMode) {
-        await updateEvent(id, eventData)
+        await updateEvent(id, formData)
       } else {
-        await createEvent(eventData)
+        await createEvent(formData)
       }
       navigate(ROUTES.events.myEvents)
     } catch (error) {
@@ -357,14 +393,21 @@ export default function CreateEvent() {
                   {tags.map((tag) => {
                     const tagId = Number(tag.id)
                     const active = values.tags.includes(tagId)
+                    const tagColor = tag.color || '#3b82f6'
+                    
                     return (
                       <Button
                         key={tag.id}
                         type="button"
-                        variant={active ? "secondary" : "default"}
                         onClick={() => handleTagToggle(tagId)}
-                        className={active ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "bg-black text-white hover:bg-slate-800"}
                         disabled={disabled}
+                        style={{
+                          backgroundColor: active ? tagColor : '#f0f0f0',
+                          color: active ? '#ffffff' : '#000000',
+                          borderColor: tagColor,
+                          borderWidth: '2px'
+                        }}
+                        className="transition-all hover:opacity-80"
                       >
                         {tag.name}
                       </Button>
@@ -395,6 +438,74 @@ export default function CreateEvent() {
                 {errors.description && (
                   <FieldDescription className="text-destructive">
                     {errors.description}
+                  </FieldDescription>
+                )}
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="image">Афиша мероприятия</FieldLabel>
+                <FieldGroup>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-6 py-10 text-center hover:border-muted-foreground/50 transition-colors cursor-pointer"
+                      onClick={() => document.getElementById('image')?.click()}
+                    >
+                      <div className="space-y-2">
+                        <svg
+                          className="mx-auto h-12 w-12 text-muted-foreground"
+                          stroke="currentColor"
+                          fill="none"
+                          viewBox="0 0 48 48"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-8l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 28l3.172-3.172a4 4 0 015.656 0l10.172 10.172"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <p className="text-sm text-muted-foreground">
+                          Нажмите или перетащите изображение
+                        </p>
+                      </div>
+                      <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        disabled={disabled}
+                        className="hidden"
+                      />
+                    </div>
+
+                    {imagePreview && (
+                      <div className="relative">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-full h-40 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setValues(prev => ({ ...prev, image: null }))
+                            setImagePreview(null)
+                          }}
+                          disabled={disabled}
+                          className="absolute top-2 right-2 rounded-full bg-destructive text-white p-2 hover:bg-destructive/90 transition-colors"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </FieldGroup>
+                {errors.image && (
+                  <FieldDescription className="text-destructive">
+                    {errors.image}
                   </FieldDescription>
                 )}
               </Field>
